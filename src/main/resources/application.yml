@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: CONTACT_MANAGER_APP
+  mvc:
+    content-negotiation:
+      favor-parameter: false
+      ignore-accept-header: false
+      media-types:
+        xml: application/xml
+        json: application/json
+  jackson:
+    xml:
+      enabled: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/contact-app
+    username: root
+    password: Admin1234$
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
