@@ -1,21 +1,41 @@
 package com.contact_manager.app.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.contact_manager.app.model.entities.CustomResponseEntity;
+import com.contact_manager.app.model.request.LoginRequest;
+import com.contact_manager.app.model.request.UserSignupDto;
+import com.contact_manager.app.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-//@RestController
-@Controller
-@RequestMapping("/api/v1/auth/")
+@RestController
+//@Controller
+@RequestMapping("/v1/auth/")
 public class AuthController {
 
-    @GetMapping("signup")
-    public String signup() {
-        return "main/signup";
+    AuthService authService;
+    @Autowired
+    AuthController(AuthService authService){
+        this.authService=authService;
     }
 
-    @GetMapping("login")
-    public String login() {
-        return "main/login";
+    @PostMapping("signup")
+    public CustomResponseEntity<?> signup(@RequestBody UserSignupDto userSignupDto) {
+        return authService.signup(userSignupDto);
     }
+
+    @PostMapping("login")
+    public CustomResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
+    }
+
+
+//    @GetMapping("signup")
+//    public String signup() {
+//        return "main/signup";
+//    }
+//
+//    @GetMapping("login")
+//    public String login() {
+//        return "main/login";
+//    }
 }
