@@ -10,6 +10,8 @@ import com.contact_manager.app.model.request.UserSignupDto;
 import com.contact_manager.app.repository.RolesRepository;
 import com.contact_manager.app.repository.UserRepository;
 import com.contact_manager.app.service.AuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.Set;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
@@ -34,23 +38,30 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public CustomResponseEntity<LoginRequest> login(LoginRequest loginRequest) {
-        // Validate input
-        if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
-            return CustomResponseEntity.error("Username and password are required!");
+        try {
+            if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
+                logger.error("Username and password are required!");
+                return CustomResponseEntity.error("Username and password are required!");
+            }
+
+            User user = userRepository.findByUsername(loginRequest.getUsername());
+            if (user == null) {
+                logger.error("Invalid username or password!");
+                return CustomResponseEntity.error("Invalid username or password!");
+            }
+
+            if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                logger.error("Invalid username or password!");
+                return CustomResponseEntity.error("Invalid username or password!");
+            }
+
+            return new CustomResponseEntity<>(loginRequest, "Login successful!");
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred during login: {}", e.getMessage(), e);
+            return CustomResponseEntity.error("An unexpected error occurred. Please try again later.");
         }
-
-        User user = userRepository.findByUsername(loginRequest.getUsername());
-
-        if (user==null) {
-            return CustomResponseEntity.error("Invalid username or password!");
-        }
-
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return CustomResponseEntity.error("Invalid username or password!");
-        }
-
-        return new CustomResponseEntity<>(loginRequest, "Login successful!");
     }
+
 
     @Override
     public CustomResponseEntity<UserSignupDto> signup(UserSignupDto userSignupDto) {

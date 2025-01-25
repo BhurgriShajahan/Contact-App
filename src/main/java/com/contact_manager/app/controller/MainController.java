@@ -1,25 +1,24 @@
 package com.contact_manager.app.controller;
 
+import com.contact_manager.app.endpoints.MainControllerEndpoints;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-//@RestController
 @Controller
-@RequestMapping("/v1/base/")
-public class MainController {
+public class MainController implements MainControllerEndpoints {
 
-    @GetMapping("home")
+    @Override
     public String index() {
         return "main/home";
     }
 
-    @GetMapping("about")
+    @Override
     public String about() {
         return "main/about";
     }
 
-    @GetMapping("services")
+    @Override
     public String services() {
         return "main/services";
     }

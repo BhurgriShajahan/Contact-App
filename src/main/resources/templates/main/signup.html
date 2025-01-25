@@ -2,7 +2,7 @@
 <html
   lang="en"
   xmlns:th="http://www.thymeleaf.org"
-  th:replace="/main/base::layout(~{::section},~{::title})"
+  th:replace="~{/main/base::layout(~{::section},~{::title})}"
 >
   <head>
     <meta charset="UTF-8" />
@@ -20,19 +20,25 @@
           <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">
             Sign Up
           </h2>
-          <form action="#" method="POST" class="space-y-4">
+          <form
+            th:action="@{/v1/auth/signup}"
+            th:object="${userSignupDto}"
+            method="post"
+            class="space-y-4"
+          >
             <!-- Full Name Field -->
             <div>
               <label
-                for="fullname"
+                for="username"
                 class="block text-gray-700 font-medium mb-2"
               >
-                Full Name
+                Name
               </label>
               <input
                 type="text"
-                id="fullname"
-                name="fullname"
+                id="username"
+                name="username"
+                th:field="*{username}"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="Enter your full name"
                 required
@@ -48,26 +54,9 @@
                 type="email"
                 id="email"
                 name="email"
+                th:field="*{email}"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            <!-- Username Field -->
-            <div>
-              <label
-                for="username"
-                class="block text-gray-700 font-medium mb-2"
-              >
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
-                placeholder="Choose a username"
                 required
               />
             </div>
@@ -84,13 +73,14 @@
                 type="password"
                 id="password"
                 name="password"
+                th:field="*{password}"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 placeholder="Create a password"
                 required
               />
             </div>
 
-            <!-- Confirm Password Field -->
+            <!-- Confirm Password Field
             <div>
               <label
                 for="confirm-password"
@@ -106,7 +96,7 @@
                 placeholder="Confirm your password"
                 required
               />
-            </div>
+            </div> -->
 
             <!-- Signup Button -->
             <div>
@@ -130,6 +120,9 @@
             </div>
           </form>
         </div>
+      </div>
+      <div th:if="${error}">
+        <p th:text="${error}" style="color: red"></p>
       </div>
     </section>
   </body>
